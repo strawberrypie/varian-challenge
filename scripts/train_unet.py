@@ -1,5 +1,4 @@
-import sys
-sys.path.append('..')
+# Usage: PYTHONPATH=. python scripts/train_unet.py
 
 import os
 import numpy as np
@@ -8,6 +7,9 @@ import torch.nn as nn
 import collections
 import torchvision
 import torchvision.transforms as transforms
+
+from varian.transforms import RandomFlip
+from varian.aug_wrappers import SegAugmentWrapper
 
 from PIL import Image
 from pathlib import Path
@@ -42,8 +44,14 @@ valid_data = data[n_images // 2:]
 
 
 # Data loaders
-data_transform = transforms.Compose([
+augmentations = [
     # TODO specify augmentations (e.g. histogram normalization)
+    SegAugmentWrapper(
+        RandomFlip(0.5), image_key='features', mask_key='targets'
+    )
+]
+
+transformations = [
     Augmentor(
         dict_key="features",
         augment_fn=lambda x: \
@@ -52,14 +60,17 @@ data_transform = transforms.Compose([
         dict_key="targets",
         augment_fn=lambda x: \
             torch.from_numpy(x.copy()).unsqueeze_(0).float()),
-])
+]
+
+train_data_transform = transforms.Compose(augmentations + transformations)
+valid_data_transform = transforms.Compose(transformations)
 
 open_fn = lambda x: {"features": x[0], "targets": x[1]}
 
 train_loader = UtilsFactory.create_loader(
     train_data, 
     open_fn=open_fn, 
-    dict_transform=data_transform, 
+    dict_transform=train_data_transform, 
     batch_size=bs, 
     workers=n_workers, 
     shuffle=True)
@@ -67,7 +78,7 @@ train_loader = UtilsFactory.create_loader(
 valid_loader = UtilsFactory.create_loader(
     valid_data, 
     open_fn=open_fn, 
-    dict_transform=data_transform, 
+    dict_transform=valid_data_transform, 
     batch_size=bs, 
     workers=n_workers, 
     shuffle=False)
