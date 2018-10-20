@@ -112,3 +112,5 @@ dmypy.json
 
 .idea/
 data/
+
+.DS_Store

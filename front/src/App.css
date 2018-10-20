@@ -22,6 +22,95 @@
   color: #61dafb;
 }
 
+
+.main {
+  display: grid;
+  height:  200px;
+  grid-template: repeat(3, 1fr) / 1fr 1fr 1fr;
+  width: calc(100vw - 170px);
+  height: calc(100vh - 140px);
+  padding: 70px;
+  padding-left: 100px;
+
+  background-color: #000000;
+  background-image: url('./images/back.png');
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+
+
+/* Main section */
+
+.main__header,
+.main__description {
+  margin: 0;
+}
+
+.main__header {
+  grid-area:    1 / 1 / auto / span 2;
+  justify-self: start;
+  align-self:   end;
+  font-size: 56px;
+
+}
+
+.main__description {
+  grid-area: 2 / 1 / auto / span 2;
+  justify-self: start;
+  align-self:   start;
+  font-weight: 400;
+}
+
+.main__buttons {
+  grid-area: 3 / 3 / auto / span 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Form section */
+
+.form {
+  background-color: #000000;
+  height: 100vh;
+
+  color: #139eca;
+}
+
+.form__header {
+  margin: 0;
+  font-size: 48px;
+}
+
+/* Buttons */
+
+.button {
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  background: transparent;
+
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.main__buttons .button {
+  height: 80px;
+  font-size: 24px;
+  border-radius: 45px;
+}
+
+.main__buttons .button:hover {
+    /*color: #139eca;*/
+    background-color: rgba(19, 158, 202, 0.5);
+    transition: background-color ease .3s;
+}
+
+.main__buttons > .button:not(:last-child) {
+  margin-bottom: 20px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

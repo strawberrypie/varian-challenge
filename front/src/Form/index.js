@@ -41,9 +41,9 @@ export default class Form extends React.Component {
 
     renderForm = ({ redirect, name, files }) => {
         return redirect
-                ? <Redirect to={redirect} />
+                ? <Redirect push to={redirect} />
                 : <div className="form">
-                    <h1>Form</h1>
+                    <h1 className="form__header">Form</h1>
 
                     <form onSubmit={ this.handleSubmit }>
                         <label>
