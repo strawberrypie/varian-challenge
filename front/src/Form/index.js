@@ -14,23 +14,26 @@ export default class Form extends React.Component {
 
     handleSubmit = (event) => {
 
-        var formData = {
-            meta: {
-                name: this.state.name
-            },
-            data: this.state.files[0]
+        var formData = new FormData();
+        // {
+        //     meta: {
+        //         name: this.state.name
+        //     },
+        //     data: this.state.files[0]
+        // }
+        for (let i = 0; i < this.state.files.length; i++) {
+            let file = this.state.files[i];
+
+            formData.append('file', file);
         }
 
         console.log(formData);
 
         fetch(
-            'http://127.0.0.1:5000/',
+            'http://127.0.0.1:5000/v1/predict',
             {
                 method: 'POST',
-                body: formData,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
+                body: formData
             }
         ).then(response => {
             console.log(response);
