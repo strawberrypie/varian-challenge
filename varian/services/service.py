@@ -43,15 +43,13 @@ def predict():
     directory = unzip(filepath)
 
     # here preprocess and so on
-    #xs = preprocess.process_test(directory)
+    # xs = preprocess.process_test(directory)
 
     l = np.load('varian/services/380677.npz')
     xs = l['X']
-    xs_new = np.array(xs / xs.max(), dtype=np.float32)
+    ys = l['Y']
 
-
-    results = make_pictures(filepath, xs_new)
-    print(results)
+    results = make_pictures(filepath, xs)
     return jsonify(results)
 
 
@@ -74,12 +72,15 @@ def unzip(filepath):
     zip_ref.close()
 
     files = [f for f in os.listdir(directory) if not f.startswith(".")]
-
     return os.path.join(directory, files[0])
+
+
+def beauty_image(xs, ys):
+    xs_new = np.array(xs / xs.max(), dtype=np.float32)
+    return
 
 # later xs_old, xs, ys
 def make_pictures(filepath, xs_old):
-    print(xs_old.shape)
     result_folder = os.path.join(RESULT_FOLDER, '{}-dir'.format(os.path.basename(filepath)))
     print(result_folder)
     if not os.path.exists(result_folder):
@@ -92,7 +93,7 @@ def make_pictures(filepath, xs_old):
         plt.imsave(filename, xs_item, cmap=plt.get_cmap('gray'))
 
         with open(filename, 'rb') as f:
-            encoded = str(base64.b64encode(f.read()))
+            encoded = base64.b64encode(f.read()).decode('utf-8')
             results.append(encoded)
 
     return results
