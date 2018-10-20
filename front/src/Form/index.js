@@ -1,13 +1,12 @@
 import React        from 'react';
 import { Redirect } from 'react-router-dom';
-import Button       from '../Button';
 
 export default class Form extends React.Component {
 
     state = {
         redirect: void(0),
         name:     '',
-        files:    []
+        files:    void(0)
     }
 
     setRedirect = redirect => this.setState({redirect})
@@ -15,19 +14,12 @@ export default class Form extends React.Component {
     handleSubmit = (event) => {
 
         var formData = new FormData();
-        // {
-        //     meta: {
-        //         name: this.state.name
-        //     },
-        //     data: this.state.files[0]
-        // }
+
         for (let i = 0; i < this.state.files.length; i++) {
             let file = this.state.files[i];
 
             formData.append('file', file);
         }
-
-        console.log(formData);
 
         fetch(
             'http://127.0.0.1:5000/v1/predict',
@@ -42,34 +34,46 @@ export default class Form extends React.Component {
         event.preventDefault();
     }
 
-    renderForm = ({ redirect, name, files }) => {
+    renderForm = ({ redirect, files, label }) => {
         return redirect
                 ? <Redirect push to={redirect} />
-                : <div className="form">
-                    <h1 className="form__header">Form</h1>
+                : <section className="form">
+                    <h1 className="form__header">Prediction</h1>
 
-                    <form onSubmit={ this.handleSubmit }>
-                        <label>
-                            Identifier:
-                            <input
-                                type     = "text"
-                                name     = "id"
-                                value    = { name }
-                                onChange = { e => this.setState({ name: e.target.value }) }
-                            />
-                        </label>
+                    <form className="form__form" onSubmit={ this.handleSubmit }>
                         <input
-                            type     = "file"
-                            name     = "data"
-                            onChange = { e => this.setState({files: e.target.files }) }
+                            type      = "file"
+                            name      = "data"
+                            id        = "data"
+                            className = "form__inputfile"
+                            onChange  = {
+                                e => this.setState({
+                                        files: e.target.files,
+                                        label: e.target.value.split('\\').pop()
+                                    })
+                            }
                         />
-                        <input type="submit" value="Submit" />
+                        <label htmlFor = "data">
+                            {
+                                label ||
+                                <span className="button">Select .zip file...</span>
+                            }
+                        </label>
+
+                        {
+                            files &&
+                            <input
+                                type      = "submit"
+                                value     = "Submit"
+                                className = "button"
+                            />
+                        }
                     </form>
 
-                    <div className="dicomImage"></div>
+                    <div className="form__image"></div>
 
                     { console.log(this.state) }
-                </div>
+                </section>
     }
 
     render = () => this.renderForm( this.state )

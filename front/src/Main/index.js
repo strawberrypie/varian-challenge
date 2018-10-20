@@ -15,7 +15,7 @@ export default class Main extends React.Component {
                 ? <Redirect push to={redirect} />
                 : <section className="main">
                     <h1 className="main__header">Varian Analyzer</h1>
-                    <h3 className="main__description">Here goes some cool description.</h3>
+                    <h2 className="main__description">Here goes some cool description.</h2>
                     <div className="main__buttons">
                         <Button text="Scan" />
                         <Button text="Upload" onClick={ () => this.setRedirect('/predict') } />

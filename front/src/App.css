@@ -1,46 +1,20 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
+/* Main section */
 
 .main {
-  display: grid;
-  height:  200px;
+  display:       grid;
   grid-template: repeat(3, 1fr) / 1fr 1fr 1fr;
-  width: calc(100vw - 170px);
+
+  width:  calc(100vw - 170px);
   height: calc(100vh - 140px);
-  padding: 70px;
+
+  padding:      70px;
   padding-left: 100px;
 
-  background-color: #000000;
-  background-image: url('./images/back.png');
-  background-size: cover;
+  background-color:    #000000;
+  background-image:    url('./images/back.png');
+  background-size:     cover;
   background-position: 50% 50%;
 }
-
-
-
-/* Main section */
 
 .main__header,
 .main__description {
@@ -51,20 +25,23 @@
   grid-area:    1 / 1 / auto / span 2;
   justify-self: start;
   align-self:   end;
-  font-size: 56px;
 
+  font-size: 56px;
+  color: #ffffff;
 }
 
 .main__description {
-  grid-area: 2 / 1 / auto / span 2;
+  grid-area:    2 / 1 / auto / span 2;
   justify-self: start;
   align-self:   start;
+
   font-weight: 400;
 }
 
 .main__buttons {
   grid-area: 3 / 3 / auto / span 1;
-  display: flex;
+
+  display:        flex;
   flex-direction: column;
 }
 
@@ -72,8 +49,14 @@
 /* Form section */
 
 .form {
+  display: grid;
+
   background-color: #000000;
-  height: 100vh;
+  /*height: 100vh;*/
+  width: calc(100vw - 170px);
+  height: calc(100vh - 140px);
+  padding: 70px;
+  padding-left: 100px;
 
   color: #139eca;
 }
@@ -83,25 +66,51 @@
   font-size: 48px;
 }
 
+.form__form {
+  display:        flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.form__inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.form__inputfile + label {
+    display: block;
+    cursor: pointer;
+}
+
+.form__inputfile:focus + label,
+.form__inputfile + label:hover {
+}
+
+.form__inputfile + label {
+  padding: 15px 0;
+}
+
 /* Buttons */
 
 .button {
-  padding: 0;
+  padding: 20px 60px;
   border: 1px solid rgba(255, 255, 255, 0.6);
 
   background: transparent;
 
   cursor: pointer;
   color: #ffffff;
-}
 
-.main__buttons .button {
   height: 80px;
   font-size: 24px;
   border-radius: 45px;
 }
 
-.main__buttons .button:hover {
+.button:hover {
     /*color: #139eca;*/
     background-color: rgba(19, 158, 202, 0.5);
     transition: background-color ease .3s;
@@ -109,13 +118,4 @@
 
 .main__buttons > .button:not(:last-child) {
   margin-bottom: 20px;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
