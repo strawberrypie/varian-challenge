@@ -9,6 +9,7 @@ import numpy as np
 import zipfile
 from src import preprocess
 from matplotlib import pyplot as plt
+from skimage import measure
 
 app = Flask(__name__)
 CORS(app)
@@ -49,7 +50,7 @@ def predict():
     xs = l['X']
     ys = l['Y']
 
-    results = make_pictures(filepath, xs)
+    results = make_pictures(filepath, xs, ys)
     return jsonify(results)
 
 
@@ -75,25 +76,49 @@ def unzip(filepath):
     return os.path.join(directory, files[0])
 
 
-def beauty_image(xs, ys):
-    xs_new = np.array(xs / xs.max(), dtype=np.float32)
-    return
-
-# later xs_old, xs, ys
-def make_pictures(filepath, xs_old):
+def make_pictures(filepath, xs, ys):
     result_folder = os.path.join(RESULT_FOLDER, '{}-dir'.format(os.path.basename(filepath)))
-    print(result_folder)
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
 
     results = []
-    for i, xs_item in enumerate(xs_old):
+    for i, (xs_item, ys_item) in enumerate(zip(xs, ys)):
         filename = os.path.join(result_folder, '{}.png'.format(i))
 
-        plt.imsave(filename, xs_item, cmap=plt.get_cmap('gray'))
+        saved = beauty_image(filename, xs_item, ys_item)
 
-        with open(filename, 'rb') as f:
+        # plt.imsave(filename, xs_item, cmap=plt.get_cmap('gray'))
+
+
+        with open(saved, 'rb') as f:
             encoded = base64.b64encode(f.read()).decode('utf-8')
             results.append(encoded)
 
     return results
+
+def beauty_image(filename, xs, ys):
+    contours = measure.find_contours(ys, 0.8)
+    xs_new = np.array(xs / xs.max(), dtype=np.float32)
+    for contour in contours:
+        for (x, y) in contour:
+            iy = int(y)
+            ix = int(x)
+            xs_new.itemset((ix, iy), 1.0)
+            xs_new.itemset((ix + 1, iy), 1.0)
+            xs_new.itemset((ix - 1, iy), 1.0)
+            xs_new.itemset((ix, iy - 1), 1.0)
+            xs_new.itemset((ix, iy + 1), 1.0)
+
+    plt.imsave(filename, xs_new, cmap=plt.get_cmap('gray'))
+    return filename
+    #
+    # fig, ax = plt.subplots(figsize=(15, 15))
+    # # ax.imshow(xs_item * ALPHA + (1 - ALPHA) * ys_item * xs_item, cmap=plt.get_cmap('gray'))
+    # ax.imshow(xs, cmap=plt.get_cmap('gray'))
+    #
+    # contours = measure.find_contours(ys, 0.8)
+    # for n, contour in enumerate(contours):
+    #     ax.plot(contour[:, 1], contour[:, 0], linewidth=4)
+    #
+    # fig.savefig(filename)
+    # return filename
