@@ -2,14 +2,24 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename, redirect
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
 
 UPLOADER_FOLDER='/tmp/upload'
 
+EXAMPLE='varian/services/380677.npz'
+
 @app.route('/v1/ping')
 def ping():
+    l = np.load(EXAMPLE)
+    x = l['X']
+    y = l['Y']
+
+    print(x[0].shape)
+
+    # print(len(l))
     return 'Pong!'
 
 @app.route('/v1/predict', methods=['POST'])
