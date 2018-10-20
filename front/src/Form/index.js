@@ -6,8 +6,8 @@ export default class Form extends React.Component {
 
     state = {
         redirect: void(0),
-        name:     void(0),
-        files:    void(0)
+        name:     '',
+        files:    []
     }
 
     setRedirect = redirect => this.setState({redirect})
@@ -39,7 +39,7 @@ export default class Form extends React.Component {
         event.preventDefault();
     }
 
-    renderForm = ({ redirect }) => {
+    renderForm = ({ redirect, name, files }) => {
         return redirect
                 ? <Redirect to={redirect} />
                 : <div className="form">
@@ -51,14 +51,13 @@ export default class Form extends React.Component {
                             <input
                                 type     = "text"
                                 name     = "id"
-                                value    = { this.state.name }
+                                value    = { name }
                                 onChange = { e => this.setState({ name: e.target.value }) }
                             />
                         </label>
                         <input
                             type     = "file"
                             name     = "data"
-                            value    = { this.state.files }
                             onChange = { e => this.setState({files: e.target.files }) }
                         />
                         <input type="submit" value="Submit" />
