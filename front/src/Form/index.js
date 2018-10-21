@@ -1,5 +1,6 @@
 import React        from 'react';
 import { Redirect } from 'react-router-dom';
+import Button       from '../Button';
 
 export default class Form extends React.Component {
 
@@ -7,7 +8,8 @@ export default class Form extends React.Component {
         redirect: void(0),
         name:     '',
         files:    void(0),
-        loading: false
+        loading: false,
+        showButton: false
     }
 
     setRedirect = redirect => this.setState({redirect})
@@ -59,6 +61,8 @@ export default class Form extends React.Component {
             }%) contrast(${
                 50 + (e.clientY - e.target.offsetTop)/(e.target.offsetHeight / 100)
             }%)`;
+
+            !this.state.showButton && this.setState({ showButton: true })
         }
     }
 
@@ -93,20 +97,23 @@ export default class Form extends React.Component {
             }
         </form>
 
-    renderResults = (res, currentImage) =>
+    renderResults = (res, currentImage, showButton) =>
         <div className="form__results">
             <div className="form__results-list">
                 {
                     res.map(
-                        (img, index) =>
+                        ({image, percent}, index) =>
                             <div
                                 key       = {`img-${index}`}
                                 tabIndex  = {index + 1}
-                                className = "form__result"
-                                onClick   = {() => this.setState({ currentImage: img })}
+                                className = {
+                                    'form__result' +
+                                    ( (percent > 0.75) ? ' form__result-critical' : '' )
+                                }
+                                onClick   = {() => this.setState({ currentImage: {image, percent} })}
                                 onFocus   = {(e) => {
                                     document.querySelector('.form__image img').style.webkitFilter = '';
-                                    this.setState({ currentImage: img });
+                                    this.setState({ currentImage: {image, percent}, showButton: false });
                                 }}
                             >
                                 {`Image ${index}`}
@@ -115,22 +122,33 @@ export default class Form extends React.Component {
                 }
             </div>
             <div className="form__image">
+                <div>{`Certainty: ${currentImage.percent.toFixed(2) * 100}%`}</div>
                 <img
-                    src       = {`data:image/png;base64,${currentImage}`}
+                    src       = {`data:image/png;base64,${currentImage.image}`}
                     draggable = {false}
                     onMouseDown = {(e) => this.handleMouseMove(e)}
                 />
+                {
+                    showButton &&
+                    <Button
+                        text="Reset filter"
+                        onClick={() => {
+                            document.querySelector('.form__image img').style.webkitFilter = '';
+                            this.setState({ showButton: false });
+                        }}
+                    />
+                }
             </div>
         </div>
 
-    renderPredict = ({ redirect, files, label, res, loading, currentImage }) => {
+    renderPredict = ({ redirect, files, label, res, loading, currentImage, showButton }) => {
         return redirect
                 ? <Redirect push to={redirect} />
                 : <section className="form">
                     <h1 className="form__header">Prediction</h1>
                     {
                         res
-                            ? this.renderResults(res, currentImage || res[0])
+                            ? this.renderResults(res, currentImage || res[0], showButton)
                             : loading
                                 ? <div className="form__loading">
                                     <div className="form__loading-text">loading</div>

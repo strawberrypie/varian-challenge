@@ -95,9 +95,13 @@
 }
 
 .form__result {
-  padding: 3px;
+  padding: 7px;
   margin:  3px;
   color: #ffffff;
+}
+
+.form__result-critical {
+  background-color: rgba(19, 158, 202, 0.5);
 }
 
 .form__result:focus {
@@ -107,12 +111,22 @@
 
 .form__image {
   display:   flex;
+  flex-direction: column;
   flex-grow: 1;
-  /*position: relative;*/
+  position: relative;
 }
 
 .form__image img {
   width: 100%;
+}
+
+.form__image .button {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  font-size: 12px;
+  padding: 5px 15px;
+  height: 30px;
 }
 
 /*.form__image-brightness,
