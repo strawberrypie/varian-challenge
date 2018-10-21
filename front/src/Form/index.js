@@ -103,15 +103,15 @@ export default class Form extends React.Component {
             <div className="form__results-list">
                 {
                     res.map(
-                        ({image, percent}, index) =>
+                        ({image, mask, processed, percent}, index) =>
                             <div
                                 key       = {`img-${index}`}
                                 tabIndex  = {index + 1}
                                 className = "form__result"
-                                onClick   = {() => this.setState({ currentImage: {image, percent, index} })}
+                                onClick   = {() => this.setState({ currentImage: {image, mask, processed, percent, index} })}
                                 onFocus   = {(e) => {
                                     document.querySelector('.form__image img').style.webkitFilter = '';
-                                    this.setState({ currentImage: {image, percent, index}, showButton: false });
+                                    this.setState({ currentImage: {image, mask, processed, percent, index}, showButton: false });
                                 }}
                             >
                                 <div>{`Image ${index}`}</div>
@@ -150,7 +150,15 @@ export default class Form extends React.Component {
                     </div>
                 </div>
                 <img
-                    src       = {`data:image/png;base64,${currentImage.image}`}
+                    src       = {
+                        `data:image/png;base64,${
+                            imageType === 1
+                                ? currentImage.image
+                                : imageType === 2
+                                    ? currentImage.mask
+                                    : currentImage.processed
+                        }`
+                    }
                     draggable = {false}
                     onMouseDown = {(e) => this.handleMouseMove(e)}
                 />
