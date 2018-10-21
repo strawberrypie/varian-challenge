@@ -14,7 +14,11 @@ export default class Main extends React.Component {
         return redirect
                 ? <Redirect push to={redirect} />
                 : <section className="main">
-                    <h1 className="main__header">BIAS/VARIANCE</h1>
+                    <h1 className="main__header">
+                        <span>BIAS/</span>
+                        <span className="main__header-emph">VARIAN</span>
+                        <span>CE</span>
+                    </h1>
                     <h2 className="main__description">Predict early, live long.</h2>
                     <div className="main__buttons">
                         <Button text="Upload" onClick={ () => this.setRedirect('/predict') } />
