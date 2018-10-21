@@ -113,26 +113,35 @@ def make_pictures(filepath, xs, ys):
 def beauty_image(filename, xs, ys):
     contours = measure.find_contours(ys, 0.8)
     xs_new = np.array(xs / xs.max(), dtype=np.float32)
-    for contour in contours:
-        for (x, y) in contour:
-            iy = int(y)
-            ix = int(x)
-            xs_new.itemset((ix, iy), 1.0)
-            xs_new.itemset((ix + 1, iy), 1.0)
-            xs_new.itemset((ix - 1, iy), 1.0)
-            xs_new.itemset((ix, iy - 1), 1.0)
-            xs_new.itemset((ix, iy + 1), 1.0)
 
-    plt.imsave(filename, xs_new, cmap=plt.get_cmap('gray'))
+    overlay = np.zeros(xs_new.shape)
+
+    for contour in contours:
+        cx = [x for (x, y) in contour]
+        cy = [y for (x, y) in contour]
+        center = np.array([np.mean(cx), np.mean(cy)])
+        cr = np.max([np.max(cx) - np.min(cx), np.max(cy) - np.min(cy)])
+
+        for p, _ in np.ndenumerate(overlay):
+            density = max(0, (cr - np.linalg.norm(p - center)) / cr)
+            overlay.itemset(p, density)
+
+    ALPHA = 0.2
+    # plt.imshow(xs_new * ALPHA + (1 - ALPHA) * xs_new * overlay, cmap=plt.get_cmap('gray'))
+    plt.imsave(filename, xs_new * ALPHA + (1 - ALPHA) * xs_new * overlay, cmap=plt.get_cmap('gray'))
     return filename
+
+    # old version
+    # for contour in contours:
+    #     for (x, y) in contour:
+    #         iy = int(y)
+    #         ix = int(x)
+    #         xs_new.itemset((ix, iy), 1.0)
+    #         xs_new.itemset((ix + 1, iy), 1.0)
+    #         xs_new.itemset((ix - 1, iy), 1.0)
+    #         xs_new.itemset((ix, iy - 1), 1.0)
+    #         xs_new.itemset((ix, iy + 1), 1.0)
     #
-    # fig, ax = plt.subplots(figsize=(15, 15))
-    # # ax.imshow(xs_item * ALPHA + (1 - ALPHA) * ys_item * xs_item, cmap=plt.get_cmap('gray'))
-    # ax.imshow(xs, cmap=plt.get_cmap('gray'))
-    #
-    # contours = measure.find_contours(ys, 0.8)
-    # for n, contour in enumerate(contours):
-    #     ax.plot(contour[:, 1], contour[:, 0], linewidth=4)
-    #
-    # fig.savefig(filename)
+    # plt.imsave(filename, xs_new, cmap=plt.get_cmap('gray'))
     # return filename
+    # end old version
