@@ -114,7 +114,7 @@ def unzip(filepath):
     zip_ref.extractall(directory)
     zip_ref.close()
 
-    files = [f for f in os.listdir(directory) if not f.startswith(".")]
+    files = [f for f in os.listdir(directory) if not f.startswith(".") and not f.startswith("_")]
     return os.path.join(directory, files[0])
 
 

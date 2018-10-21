@@ -128,7 +128,7 @@ export default class Form extends React.Component {
             <div className="form__image">
                 <div className="form__image-header">
                     <div className="form__image-meta">
-                        <div className="form__image-label">{`Image ${currentImage.index || 0}`}</div>
+                        <div className="form__image-label">{`Image ${currentImage && currentImage.index || 0}`}</div>
                         <div>{`Certainty: ${(currentImage.percent * 100).toFixed(2)}%`}</div>
                     </div>
                     <div className="form__image-controls">
