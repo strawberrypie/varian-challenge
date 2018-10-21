@@ -145,7 +145,7 @@ def save(n):
         os.makedirs(result_folder)
     logging.info(type(n))
     filename = os.path.join(result_folder, 'temp.png')
-    plt.imsave(filename, n, cmap=plt.get_cmap('gray'))
+    plt.imsave(filename, np.array(n / n.max() * 255, dtype=np.uint8), cmap=plt.get_cmap('gray'))
     return filename
 
 
