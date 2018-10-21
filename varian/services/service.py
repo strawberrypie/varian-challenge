@@ -47,7 +47,8 @@ def predict():
     # xs = preprocess.process_test(directory)
 
 
-    l = np.load('varian/services/380677.npz')
+    # l = np.load('varian/services/380677.npz')
+    l = np.load('varian/services/ex_1.npz')
     xs = l['X']
 
     ys, percents = do_all_the_magic(xs)
@@ -58,9 +59,10 @@ def predict():
 
 
 def do_all_the_magic(xs):
-    l = np.load('varian/services/380677.npz')
+    # l = np.load('varian/services/380677.npz')
+    l = np.load('varian/services/ex_1.npz')
     # ys, percents = some_magic(xs)
-    ys = l['Y']
+    ys = l['Y_pred']
     percents = np.random.rand(len(xs))
 
     return ys, percents
