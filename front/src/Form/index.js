@@ -46,15 +46,20 @@ export default class Form extends React.Component {
     }
 
     handleMouseMove = event => {
-        // console.log(
-        //     'down',
-        //     event,
-        //     event.clientX,
-        //     event.clientY,
-            // event.clientX - event.target.offsetLeft,
-        //     event.clientY - event.target.offsetTop
-        // );
-        document.onmousemove( (e) => console.log( 'move', e.clientX - event.target.offsetLeft, e.clientY - event.target.offsetTop ) );
+        var image;
+
+        event.target.onmouseup = (e) => { e.target.onmousemove = null; return; };
+        document.onmouseup     = (e) => { if (image) {image.onmousemove = null;} };
+
+        event.target.onmousemove = (e) => {
+            image = e.target;
+
+            e.target.style.webkitFilter = `brightness(${
+                50 + (e.clientX - e.target.offsetLeft)/(e.target.offsetWidth / 100)
+            }%) contrast(${
+                50 + (e.clientY - e.target.offsetTop)/(e.target.offsetHeight / 100)
+            }%)`;
+        }
     }
 
     renderForm = (label, files) =>
@@ -99,7 +104,10 @@ export default class Form extends React.Component {
                                 tabIndex  = {index + 1}
                                 className = "form__result"
                                 onClick   = {() => this.setState({ currentImage: img })}
-                                onFocus   = {() => this.setState({ currentImage: img })}
+                                onFocus   = {(e) => {
+                                    document.querySelector('.form__image img').style.webkitFilter = '';
+                                    this.setState({ currentImage: img });
+                                }}
                             >
                                 {`Image ${index}`}
                             </div>
@@ -110,17 +118,8 @@ export default class Form extends React.Component {
                 <img
                     src       = {`data:image/png;base64,${currentImage}`}
                     draggable = {false}
-                    // onMouseDown = {(e) => this.handleMouseMove(e)}
-                    // onMouseMove   = {(e) => this.setFilter(e)}
+                    onMouseDown = {(e) => this.handleMouseMove(e)}
                 />
-                {/*<label htmlFor="brightness">
-                    brightness
-                    <input type="range" className="form__image-brightness" id="brightness"/>
-                </label>
-                <label htmlFor="contrast">
-                    contrast
-                    <input type="range" className="form__image-contrast" id="contrast"/>
-                </label>*/}
             </div>
         </div>
 
