@@ -46,12 +46,24 @@ def predict():
     # here preprocess and so on
     # xs = preprocess.process_test(directory)
 
+
     l = np.load('varian/services/380677.npz')
     xs = l['X']
-    ys = l['Y']
 
-    results = make_pictures(filepath, xs, ys)
-    return jsonify(results)
+    ys, percents = do_all_the_magic(xs)
+
+    pictures = make_pictures(filepath, xs, ys)
+    result = [{"percent": p, "image": i} for (p, i) in zip(list(percents), pictures)]
+    return jsonify(result)
+
+
+def do_all_the_magic(xs):
+    l = np.load('varian/services/380677.npz')
+    # ys, percents = some_magic(xs)
+    ys = l['Y']
+    percents = np.random.rand(len(xs))
+
+    return ys, percents
 
 
 def save(file):
