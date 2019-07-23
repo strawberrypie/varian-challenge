@@ -7,6 +7,6 @@ ItsDangerous==1.0.0
 Jinja2==2.10
 MarkupSafe==1.0
 pycurl==7.43.0.2
-requests==2.19.1
+requests==2.20.0
 urllib3==1.24.2
 Werkzeug==0.14.1
